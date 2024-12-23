@@ -24,7 +24,6 @@ class TimeExpressionFSA:
             "time": r"\b(at\s?)?(\d{1,2})[:.](\d{2})\s?(am|pm)?\b"
         }
 
-
     def process_input(self, text):
         matches = []
         # Prioritize categories to prevent misclassification
@@ -76,7 +75,6 @@ class TimeExpressionFSA:
         elif expression.lower() == "tomorrow":
             return self.today + timedelta(days=1)
 
-    
     def _calculate_week_based(self, expression):
         match = re.match(r"(on|next|this|last|coming)? ?(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)", expression, re.IGNORECASE)
         if not match:
@@ -128,33 +126,8 @@ class TimeExpressionFSA:
                 except ValueError:
                     continue  # Try the next format
 
-        return None  # Return None if no valid date could be parsed
-        
-    # def _calculate_relative_time(self, expression):
-    #     match = re.match(r"\b(\d+) (min|minute|hour|day|week|month|year)s? ?(ago|from now|later)?\b", expression, re.IGNORECASE)
-    #     if not match:
-    #         return None
-    #     value, unit, direction = match.groups()
-    #     value = int(value)
-    #     if unit.startswith("day") or unit.startswith("days"):
-    #         delta = timedelta(days=value)
-    #     elif unit.startswith("week") or unit.startswith("weeks"):
-    #         delta = timedelta(weeks=value)
-    #     elif unit.startswith("month") or unit.startswith("months"):
-    #         delta = timedelta(days=value * 30)  # Approximation
-    #     elif unit.startswith("year") or unit.startswith("years"):
-    #         delta = timedelta(days=value * 365)  # Approximation
-    #     elif unit.startswith("hour") or unit.startswith("hours"):
-    #         delta = timedelta(hours=value)  # Handle hours
-    #     elif unit.startswith("min") or unit.startswith("mins") or unit.startswith("minutes") or unit.startswith("minute"):
-    #         delta = timedelta(minutes=value)  # Handle hours
-        
-    #     if direction.lower() == "ago":
-    #         return self.today - delta
-    #     elif direction.lower() == "from now" or direction.lower() == "later":
-    #         return self.today + delta
-    #     else:
-    #         return self.today + delta
+        return None
+    
     def _calculate_relative_time(self, expression):
         match = re.match(r"(\d+) (min|minute|hour|day|week|month|year)s? ?(ago|from now|later)?", expression, re.IGNORECASE)
         if not match:
@@ -170,7 +143,6 @@ class TimeExpressionFSA:
             "year": timedelta(days=value * 365),
         }.get(unit.lower(), timedelta(0))
         return self.today + delta if direction in {"later", "from now"} else self.today - delta
-
 
     def _parse_time(self, expression):
         match = re.match(r"\b(at\s?)?(\d{1,2})[:.](\d{2})\s?(am|pm)?\b", expression, re.IGNORECASE)
