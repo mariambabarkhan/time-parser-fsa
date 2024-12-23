@@ -1,15 +1,15 @@
 from flask import Flask, request, jsonify
-from datetime import datetime, timedelta
+from datetime import datetime
 from fsa import TimeExpressionFSA
-import re
 
 app = Flask(__name__)
-fsa = TimeExpressionFSA()
 
 @app.route("/process", methods=["POST"])
 def process_time_expression():
     data = request.json
     text = data.get("text", "")
+    current_time = datetime.now()
+    fsa = TimeExpressionFSA(today=current_time)
     matches = fsa.process_input(text)
     final_date = fsa.calculate_combined_datetime(matches)
     if final_date:
